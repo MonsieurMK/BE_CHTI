@@ -17,7 +17,7 @@ int main(void)
 CLOCK_Configure();
 
 // configuration du Timer 4 en débordement 100ms
-	
+
 //** Placez votre code là ** //	
 	
 // Activation des interruptions issues du Timer 4
