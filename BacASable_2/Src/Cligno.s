@@ -36,9 +36,25 @@ FlagCligno dcd 0
 ;}
 
 timer_callback proc
-	ldr r0, =FlagCligno
-	cmp r0, #1
-	
+			push {lr}
+		ldr r1, =FlagCligno 
+		ldr r2, [r1] 
+		cmp r2, #1
+		beq equal 
+		mov r2, #1  
+		str r2, [r1]
+		mov r0, #1
+		bl GPIOB_Clear
+out		pop {pc}
+equal                     
+		mov r2, #0
+		str r2, [r1]
+		mov r0, #1
+		bl GPIOB_Set
+		b out
+
+fin		
+		endp
 	
 
 
