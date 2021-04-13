@@ -7,6 +7,7 @@
 	area    mesdata,data,readonly
 	IMPORT Son
 	IMPORT LongueurSon
+	include DriverJeuLaser.inc
 
 ;Section RAM (read write):
 	area    maram,data,readwrite
@@ -18,6 +19,7 @@ indexTable dcd 0
 	EXPORT indexTable
 		
 	EXPORT CallbackSon
+	EXPORT StartSon
 	
 ; ===============================================================================================
 	
@@ -27,23 +29,33 @@ indexTable dcd 0
 ; écrire le code ici		
 
 CallbackSon proc ; -32768 = 0, 32767 = 719
-	ldr		r0, =indexTable
-	ldr		r1, [r0]
+	ldr		r3, =indexTable
+	ldr		r1, [r3]
 	ldr		r12, =LongueurSon
 	ldr		r12, [r12]
 	cmp		r1, r12
 	bge		ValeurMax
 	ldr		r2, =Son
-	ldrsh	r3, [r2, r1, lsl #1]
-	add		r3, #32768
+	ldrsh	r0, [r2, r1, lsl #1]
+	add		r0, #32768
 	mov		r12, #91
-	udiv	r3, r12
+	udiv	r0, r12
 	add		r1, #1
-	str		r1, [r0]
-	ldr		r0, =SortieSon
-	strh	r3, [r0]
+	str		r1, [r3]
+	;ldr		r0, =SortieSon
+	;strh	r3, [r0]
+	push	{lr}
+	bl		PWM_Set_Value_TIM3_Ch3
 ValeurMax
-	bx lr
+	pop		{pc}
+	endp
+		
+StartSon	proc
+	; remise à zero
+	ldr		r0, =indexTable
+	mov		r1,	#0
+	str		r1, [r0]
+	bx		lr
 	endp
 
 	END

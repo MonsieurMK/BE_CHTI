@@ -2,6 +2,7 @@
 
 #include "DriverJeuLaser.h"
 void CallbackSon(void);
+void StartSon(void);
 
 extern int SortieSon;
 
@@ -26,12 +27,18 @@ CLOCK_Configure();
 Timer_1234_Init_ff(TIM4, 6552);
 Active_IT_Debordement_Timer(TIM4, 2, CallbackSon);
 	
+// Avec une période de ticks T = 720
+// Fréquence de la PWM : F = 1/720 = 0,0013888888888889 MHz
+PWM_Init_ff(TIM3, 3, 720);
+GPIO_Configure(GPIOB, 0, OUTPUT, ALT_PPULL);
+//PWM_Set_Value_TIM3_Ch3(125);
 	
 
 //============================================================================	
 	
 	while	(1)
 	{
-
+		for (int i = 0; i < 10000000; i++) {}
+		StartSon();
 	}
 }
