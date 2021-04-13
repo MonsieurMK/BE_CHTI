@@ -13,8 +13,7 @@ ARM Macro Assembler    Page 1
     6 00000000         ;Section RAM (read only) :
     7 00000000                 area             mesdata,data,readonly
     8 00000000                 IMPORT           Son
-    9 00000000 000002CF 
-                       MAX     equ              719
+    9 00000000                 IMPORT           LongueurSon
    10 00000000         
    11 00000000         ;Section RAM (read write):
    12 00000000                 area             maram,data,readwrite
@@ -39,36 +38,41 @@ ARM Macro Assembler    Page 1
    27 00000000         ; écrire le code ici  
    28 00000000         
    29 00000000         CallbackSon
-                               proc
-   30 00000000 4808            ldr              r0, =indexTable
+                               proc                         ; -32768 = 0, 32767
+                                                             = 719
+   30 00000000 480B            ldr              r0, =indexTable
    31 00000002 6801            ldr              r1, [r0]
-   32 00000004 F240 2CCF       ldr              r12, =MAX
+   32 00000004 F8DF C02C       ldr              r12, =LongueurSon
    33 00000008 F8DC C000       ldr              r12, [r12]
    34 0000000C 4561            cmp              r1, r12
-   35 0000000E D807            bhi              ValeurMax
-   36 00000010 4A05            ldr              r2, =Son
+   35 0000000E DA0D            bge              ValeurMax
+   36 00000010 4A09            ldr              r2, =Son
    37 00000012 F932 3011       ldrsh            r3, [r2, r1, lsl #1]
-   38 00000016 F101 0101       add              r1, #1
-   39 0000001A 6001            str              r1, [r0]
-   40 0000001C 4803            ldr              r0, =SortieSon
-   41 0000001E 8003            strh             r3, [r0]
-   42 00000020         ValeurMax
-   43 00000020 4770            bx               lr
-   44 00000022                 endp
-   45 00000022         
-   46 00000022                 END
+   38 00000016 F503 4300       add              r3, #32768
+   39 0000001A F04F 0C5B       mov              r12, #91
+   40 0000001E FBB3 F3FC       udiv             r3, r12
+   41 00000022 F101 0101       add              r1, #1
+   42 00000026 6001            str              r1, [r0]
+   43 00000028 4804            ldr              r0, =SortieSon
+   44 0000002A 8003            strh             r3, [r0]
+   45 0000002C         ValeurMax
+   46 0000002C 4770            bx               lr
+   47 0000002E                 endp
+   48 0000002E         
+   49 0000002E                 END
               00 00 00000000 
               00000000 
               00000000 
-Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
-ork --depend=.\obj\gestionson.d -o.\obj\gestionson.o -I.\RTE\_Simu -IC:\Program
-data\Keil\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Programdata\Keil\Ar
 
 
 
 ARM Macro Assembler    Page 2 
 
 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\obj\gestionson.d -o.\obj\gestionson.o -I.\RTE\_Simu -IC:\Program
+data\Keil\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Programdata\Keil\Ar
 m\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include --predefine="__EVAL SETA 1" --p
 redefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 530" --predefi
 ne="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --predefine="_RTE_ SETA 1" 
@@ -101,7 +105,7 @@ Symbol: SortieSon
       At line 14 in file Src\GestionSon.s
    Uses
       At line 15 in file Src\GestionSon.s
-      At line 40 in file Src\GestionSon.s
+      At line 43 in file Src\GestionSon.s
 
 indexTable 00000004
 
@@ -135,11 +139,11 @@ Symbol: CallbackSon
    Uses
       At line 20 in file Src\GestionSon.s
 Comment: CallbackSon used once
-ValeurMax 00000020
+ValeurMax 0000002C
 
 Symbol: ValeurMax
    Definitions
-      At line 42 in file Src\GestionSon.s
+      At line 45 in file Src\GestionSon.s
    Uses
       At line 35 in file Src\GestionSon.s
 Comment: ValeurMax used once
@@ -156,23 +160,16 @@ Comment: moncode unused
 
 
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
-Absolute symbols
+External symbols
 
-MAX 000002CF
+LongueurSon 00000000
 
-Symbol: MAX
+Symbol: LongueurSon
    Definitions
       At line 9 in file Src\GestionSon.s
    Uses
       At line 32 in file Src\GestionSon.s
-Comment: MAX used once
-1 symbol
-
-
-
-ARM Macro Assembler    Page 1 Alphabetic symbol ordering
-External symbols
-
+Comment: LongueurSon used once
 Son 00000000
 
 Symbol: Son
@@ -181,5 +178,5 @@ Symbol: Son
    Uses
       At line 36 in file Src\GestionSon.s
 Comment: Son used once
-1 symbol
+2 symbols
 346 symbols in table
