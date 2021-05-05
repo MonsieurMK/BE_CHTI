@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>.\Driver</IncludePath>
             </VariousControls>
           </Aads>
           <LDads>
@@ -387,6 +387,11 @@
               <FileName>principal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Src\principal.c</FilePath>
+            </File>
+            <File>
+              <FileName>GestionSon.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Driver\GestionSon.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -811,6 +816,11 @@
               <FileName>principal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Src\principal.c</FilePath>
+            </File>
+            <File>
+              <FileName>GestionSon.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Driver\GestionSon.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1304,6 +1314,11 @@
               <FileName>principal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Src\principal.c</FilePath>
+            </File>
+            <File>
+              <FileName>GestionSon.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Driver\GestionSon.h</FilePath>
             </File>
           </Files>
         </Group>

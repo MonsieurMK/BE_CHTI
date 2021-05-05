@@ -1,8 +1,5 @@
-
-
 #include "DriverJeuLaser.h"
-void CallbackSon(void);
-void StartSon(void);
+#include "GestionSon.h"
 
 extern int SortieSon;
 
@@ -38,7 +35,7 @@ GPIO_Configure(GPIOB, 0, OUTPUT, ALT_PPULL);
 	
 	while	(1)
 	{
-		for (int i = 0; i < 10000000; i++) {}
+		for (int i = 0; i < 2000000; i++) {}
 		StartSon();
 	}
 }

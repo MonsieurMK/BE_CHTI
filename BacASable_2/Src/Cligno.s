@@ -36,31 +36,25 @@ FlagCligno dcd 0
 ;}
 
 timer_callback proc
-			push {lr}
-		ldr r1, =FlagCligno 
-		ldr r2, [r1] 
-		cmp r2, #1
-		beq equal 
-		mov r2, #1  
-		str r2, [r1]
-		mov r0, #1
-		bl GPIOB_Clear
-out		pop {pc}
-equal                     
-		mov r2, #0
-		str r2, [r1]
-		mov r0, #1
-		bl GPIOB_Set
-		b out
-
-fin		
-		endp
-	
-
-
-
-
-
-		
+	mov r0, #1
+	ldr r1, =FlagCligno
+	ldrb r2, [r1]
+	cmp r2, #1
+	bne	Sinon
+	mov r2, #0
+	strb r2, [r1]
+	push {LR}
+	BL GPIOB_Set
+	pop {PC}
+	B FinSi
+Sinon
+	mov r2, #1
+	strb r2, [r1]
+	push {LR}
+	BL GPIOB_Clear
+	pop {pc}
+FinSi
+	BX LR
+	endp		
 		
 	END	

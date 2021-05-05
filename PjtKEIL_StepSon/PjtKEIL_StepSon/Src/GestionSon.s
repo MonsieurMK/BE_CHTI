@@ -30,20 +30,20 @@ indexTable dcd 0
 
 CallbackSon proc ; -32768 = 0, 32767 = 719
 	ldr		r3, =indexTable
-	ldr		r1, [r3]
+	ldr		r1, [r3]	; r1 prend la valeur de l'index
 	ldr		r12, =LongueurSon
-	ldr		r12, [r12]
+	ldr		r12, [r12]	; on stocke la Longueur du son dans r12
 	cmp		r1, r12
-	bge		ValeurMax
+	bge		ValeurMax	; si index >= LongueurSon (donc si l'index dépasse la valeur max du tableau), on se rend au label ValeurMax et on sort donc de la fonction
 	ldr		r2, =Son
-	ldrsh	r0, [r2, r1, lsl #1]
+	ldrsh	r0, [r2, r1, lsl #1]	; on stocke dans r0 la valeur du Son avec l'indice comme offset
 	add		r0, #32768
 	mov		r12, #91
-	udiv	r0, r12
-	add		r1, #1
+	udiv	r0, r12   ; on ramène les valeurs de r0 dans la plage des valeurs possibles : [0, 719]
+	add		r1, #1   ; on incrémente l'index
 	str		r1, [r3]
-	;ldr		r0, =SortieSon
-	;strh	r3, [r0]
+	;ldr		r12, =SortieSon
+	;strh	r0, [r12]
 	push	{lr}
 	bl		PWM_Set_Value_TIM3_Ch3
 ValeurMax
@@ -51,10 +51,10 @@ ValeurMax
 	endp
 		
 StartSon	proc
-	; remise à zero
-	ldr		r0, =indexTable
-	mov		r1,	#0
-	str		r1, [r0]
+	; remise à zero de l'index
+	ldr		r1, =indexTable
+	mov		r2,	#0
+	str		r2, [r1]
 	bx		lr
 	endp
 

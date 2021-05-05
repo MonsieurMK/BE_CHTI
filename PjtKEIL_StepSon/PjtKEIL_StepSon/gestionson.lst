@@ -112,38 +112,56 @@ ARM Macro Assembler    Page 2
                                proc                         ; -32768 = 0, 32767
                                                              = 719
    32 00000000 4B0E            ldr              r3, =indexTable
-   33 00000002 6819            ldr              r1, [r3]
+   33 00000002 6819            ldr              r1, [r3]    ; r1 prend la valeu
+                                                            r de l'index
    34 00000004 F8DF C038       ldr              r12, =LongueurSon
-   35 00000008 F8DC C000       ldr              r12, [r12]
+   35 00000008 F8DC C000       ldr              r12, [r12]  ; on stocke la Long
+                                                            ueur du son dans r1
+                                                            2
    36 0000000C 4561            cmp              r1, r12
-   37 0000000E DA0E            bge              ValeurMax
+   37 0000000E DA0E            bge              ValeurMax   ; si index >= Longu
+                                                            eurSon (donc si l'i
+                                                            ndex dépasse la val
+                                                            eur max du tableau)
+                                                            , on se rend au lab
+                                                            el ValeurMax et on 
+                                                            sort donc de la fon
+                                                            ction
    38 00000010 4A0C            ldr              r2, =Son
-   39 00000012 F932 0011       ldrsh            r0, [r2, r1, lsl #1]
-   40 00000016 F500 4000       add              r0, #32768
-   41 0000001A F04F 0C5B       mov              r12, #91
-   42 0000001E FBB0 F0FC       udiv             r0, r12
-   43 00000022 F101 0101       add              r1, #1
-   44 00000026 6019            str              r1, [r3]
-   45 00000028         ;ldr  r0, =SortieSon
-   46 00000028         ;strh r3, [r0]
-   47 00000028 B500            push             {lr}
-   48 0000002A F7FF FFFE       bl               PWM_Set_Value_TIM3_Ch3
 
 
 
 ARM Macro Assembler    Page 3 
 
 
+   39 00000012 F932 0011       ldrsh            r0, [r2, r1, lsl #1] ; on stock
+                                                            e dans r0 la valeur
+                                                             du Son avec l'indi
+                                                            ce comme offset
+   40 00000016 F500 4000       add              r0, #32768
+   41 0000001A F04F 0C5B       mov              r12, #91
+   42 0000001E FBB0 F0FC       udiv             r0, r12     ; on ramène les val
+                                                            eurs de r0 dans la 
+                                                            plage des valeurs p
+                                                            ossibles : [0, 719]
+                                                            
+   43 00000022 F101 0101       add              r1, #1      ; on incrémente l'i
+                                                            ndex
+   44 00000026 6019            str              r1, [r3]
+   45 00000028         ;ldr  r12, =SortieSon
+   46 00000028         ;strh r0, [r12]
+   47 00000028 B500            push             {lr}
+   48 0000002A F7FF FFFE       bl               PWM_Set_Value_TIM3_Ch3
    49 0000002E         ValeurMax
    50 0000002E BD00            pop              {pc}
    51 00000030                 endp
    52 00000030         
    53 00000030         StartSon
                                proc
-   54 00000030         ; remise à zero
-   55 00000030 4802            ldr              r0, =indexTable
-   56 00000032 F04F 0100       mov              r1, #0
-   57 00000036 6001            str              r1, [r0]
+   54 00000030         ; remise à zero de l'index
+   55 00000030 4902            ldr              r1, =indexTable
+   56 00000032 F04F 0200       mov              r2, #0
+   57 00000036 600A            str              r2, [r1]
    58 00000038 4770            bx               lr
    59 0000003A                 endp
    60 0000003A         
@@ -152,12 +170,12 @@ ARM Macro Assembler    Page 3
               00000000 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
-ork --depend=.\obj\gestionson.d -o.\obj\gestionson.o -I.\Driver -I.\RTE\_CibleS
-ondeKEIL -IC:\Programdata\Keil\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC
-:\Programdata\Keil\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include --predefin
-e="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSIO
-N SETA 530" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --pred
-efine="_RTE_ SETA 1" --list=gestionson.lst Src\GestionSon.s
+ork --depend=.\obj\gestionson.d -o.\obj\gestionson.o -I.\Driver -I.\RTE\_Simu -
+IC:\Programdata\Keil\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Programd
+ata\Keil\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include --predefine="__EVAL 
+SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 530
+" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --predefine="_RT
+E_ SETA 1" --list=gestionson.lst Src\GestionSon.s
 
 
 
