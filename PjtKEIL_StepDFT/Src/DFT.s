@@ -32,6 +32,7 @@ Somme
 	; partie réelle
 	ldrsh	r3, [r0, r2, lsl #1] ; x(n) est stocké dans r3
 	mul		r5, r1, r2 ; p = k * n
+	ldrsh	r6, [r4, r2, lsl #1]
 	ldrsh	r6, [r4, r5, lsl #1] ; dans r6 on a le cos
 	mul		r3, r6 ; r3 = x(n)*cos, le résultat de la multiplication est en format 5.27
 	add		r12, r3 ; on stocke la somme dans r12
