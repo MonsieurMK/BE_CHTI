@@ -4,7 +4,7 @@
 
 extern short int LeSignal[64]; 
 
-//int tab[64];
+int tab[64];
 
 int main(void)
 {
@@ -21,7 +21,10 @@ CLOCK_Configure();
 	
 while	(1)
 	{
-		DFT_ModuleAuCarre(LeSignal, 17);
+		for (int i = 0; i < 64; i++) {
+			tab[i] = DFT_ModuleAuCarre(LeSignal, i);
+		}
+		
 		int i = 0;
 	}
 }
