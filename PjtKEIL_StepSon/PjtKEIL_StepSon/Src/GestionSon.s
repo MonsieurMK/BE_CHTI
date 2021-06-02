@@ -2,7 +2,7 @@
 	THUMB   
 		
 
-; ====================== zone de rÈservation de donnÈes,  ======================================
+; ====================== zone de r√©servation de donn√©es,  ======================================
 ;Section RAM (read only) :
 	area    mesdata,data,readonly
 	IMPORT Son
@@ -26,7 +26,16 @@ indexTable dcd 0
 		
 ;Section ROM code (read only) :		
 	area    moncode,code,readonly
-; Ècrire le code ici		
+; √©crire le code ici	
+
+; algo en c:
+; static int i = 0;
+; if (i < ValeurMax) {
+; 	son = Son[i];
+; 	son = (son + 32768) / 91;
+; 	PWM_Set_Value(son);
+; 	i++;
+; }
 
 CallbackSon proc ; -32768 = 0, 32767 = 719
 	ldr		r3, =indexTable
@@ -34,13 +43,13 @@ CallbackSon proc ; -32768 = 0, 32767 = 719
 	ldr		r12, =LongueurSon
 	ldr		r12, [r12]	; on stocke la Longueur du son dans r12
 	cmp		r1, r12
-	bge		ValeurMax	; si index >= LongueurSon (donc si l'index dÈpasse la valeur max du tableau), on se rend au label ValeurMax et on sort donc de la fonction
+	bge		ValeurMax	; si index >= LongueurSon (donc si l'index d√©passe la valeur max du tableau), on se rend au label ValeurMax et on sort donc de la fonction
 	ldr		r2, =Son
 	ldrsh	r0, [r2, r1, lsl #1]	; on stocke dans r0 la valeur du Son avec l'indice comme offset
 	add		r0, #32768
 	mov		r12, #91
-	udiv	r0, r12   ; on ramËne les valeurs de r0 dans la plage des valeurs possibles : [0, 719]
-	add		r1, #1   ; on incrÈmente l'index
+	udiv	r0, r12   ; on ram√®ne les valeurs de r0 dans la plage des valeurs possibles : [0, 719]
+	add		r1, #1   ; on incr√©mente l'index
 	str		r1, [r3]
 	;ldr		r12, =SortieSon
 	;strh	r0, [r12]
@@ -51,7 +60,7 @@ ValeurMax
 	endp
 		
 StartSon	proc
-	; remise ‡ zero de l'index
+	; remise √† zero de l'index
 	ldr		r1, =indexTable
 	mov		r2,	#0
 	str		r2, [r1]
