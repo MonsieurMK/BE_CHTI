@@ -215,7 +215,7 @@
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>tab,0x10</ItemText>
+          <ItemText>tab,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
@@ -258,7 +258,7 @@
         <AscS3>0</AscS3>
         <aSer3>0</aSer3>
         <eProf>0</eProf>
-        <aLa>0</aLa>
+        <aLa>1</aLa>
         <aPa1>0</aPa1>
         <AscS4>0</AscS4>
         <aSer4>0</aSer4>

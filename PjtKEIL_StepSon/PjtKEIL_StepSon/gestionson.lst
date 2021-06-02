@@ -8,8 +8,8 @@ ARM Macro Assembler    Page 1
     2 00000000                 THUMB
     3 00000000         
     4 00000000         
-    5 00000000         ; ====================== zone de rÈservation de donnÈes,
-                         ======================================
+    5 00000000         ; ====================== zone de r√©servation de donn√©e
+                       s,  ======================================
     6 00000000         ;Section RAM (read only) :
     7 00000000                 area             mesdata,data,readonly
     8 00000000                 IMPORT           Son
@@ -106,66 +106,75 @@ ARM Macro Assembler    Page 2
    26 00000008         
    27 00000008         ;Section ROM code (read only) :  
    28 00000008                 area             moncode,code,readonly
-   29 00000000         ; Ècrire le code ici  
+   29 00000000         ; √©crire le code ici 
    30 00000000         
-   31 00000000         CallbackSon
+   31 00000000         ; algo en c:
+   32 00000000         ; static int i = 0;
+   33 00000000         ; if (i < ValeurMax) {
+   34 00000000         ;  son = Son[i];
+   35 00000000         ;  son = (son + 32768) / 91;
+   36 00000000         ;  PWM_Set_Value(son);
+   37 00000000         ;  i++;
+   38 00000000         ; }
+   39 00000000         
+   40 00000000         CallbackSon
                                proc                         ; -32768 = 0, 32767
                                                              = 719
-   32 00000000 4B0E            ldr              r3, =indexTable
-   33 00000002 6819            ldr              r1, [r3]    ; r1 prend la valeu
+   41 00000000 4B0E            ldr              r3, =indexTable
+   42 00000002 6819            ldr              r1, [r3]    ; r1 prend la valeu
                                                             r de l'index
-   34 00000004 F8DF C038       ldr              r12, =LongueurSon
-   35 00000008 F8DC C000       ldr              r12, [r12]  ; on stocke la Long
+   43 00000004 F8DF C038       ldr              r12, =LongueurSon
+   44 00000008 F8DC C000       ldr              r12, [r12]  ; on stocke la Long
                                                             ueur du son dans r1
                                                             2
-   36 0000000C 4561            cmp              r1, r12
-   37 0000000E DA0E            bge              ValeurMax   ; si index >= Longu
-                                                            eurSon (donc si l'i
-                                                            ndex dÈpasse la val
-                                                            eur max du tableau)
-                                                            , on se rend au lab
-                                                            el ValeurMax et on 
-                                                            sort donc de la fon
-                                                            ction
-   38 00000010 4A0C            ldr              r2, =Son
+   45 0000000C 4561            cmp              r1, r12
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-   39 00000012 F932 0011       ldrsh            r0, [r2, r1, lsl #1] ; on stock
+   46 0000000E DA0E            bge              ValeurMax   ; si index >= Longu
+                                                            eurSon (donc si l'i
+                                                            ndex d√©passe la va
+                                                            leur max du tableau
+                                                            ), on se rend au la
+                                                            bel ValeurMax et on
+                                                             sort donc de la fo
+                                                            nction
+   47 00000010 4A0C            ldr              r2, =Son
+   48 00000012 F932 0011       ldrsh            r0, [r2, r1, lsl #1] ; on stock
                                                             e dans r0 la valeur
                                                              du Son avec l'indi
                                                             ce comme offset
-   40 00000016 F500 4000       add              r0, #32768
-   41 0000001A F04F 0C5B       mov              r12, #91
-   42 0000001E FBB0 F0FC       udiv             r0, r12     ; on ramËne les val
-                                                            eurs de r0 dans la 
-                                                            plage des valeurs p
-                                                            ossibles : [0, 719]
-                                                            
-   43 00000022 F101 0101       add              r1, #1      ; on incrÈmente l'i
-                                                            ndex
-   44 00000026 6019            str              r1, [r3]
-   45 00000028         ;ldr  r12, =SortieSon
-   46 00000028         ;strh r0, [r12]
-   47 00000028 B500            push             {lr}
-   48 0000002A F7FF FFFE       bl               PWM_Set_Value_TIM3_Ch3
-   49 0000002E         ValeurMax
-   50 0000002E BD00            pop              {pc}
-   51 00000030                 endp
-   52 00000030         
-   53 00000030         StartSon
+   49 00000016 F500 4000       add              r0, #32768
+   50 0000001A F04F 0C5B       mov              r12, #91
+   51 0000001E FBB0 F0FC       udiv             r0, r12     ; on ram√®ne les va
+                                                            leurs de r0 dans la
+                                                             plage des valeurs 
+                                                            possibles : [0, 719
+                                                            ]
+   52 00000022 F101 0101       add              r1, #1      ; on incr√©mente l'
+                                                            index
+   53 00000026 6019            str              r1, [r3]
+   54 00000028         ;ldr  r12, =SortieSon
+   55 00000028         ;strh r0, [r12]
+   56 00000028 B500            push             {lr}
+   57 0000002A F7FF FFFE       bl               PWM_Set_Value_TIM3_Ch3
+   58 0000002E         ValeurMax
+   59 0000002E BD00            pop              {pc}
+   60 00000030                 endp
+   61 00000030         
+   62 00000030         StartSon
                                proc
-   54 00000030         ; remise ‡ zero de l'index
-   55 00000030 4902            ldr              r1, =indexTable
-   56 00000032 F04F 0200       mov              r2, #0
-   57 00000036 600A            str              r2, [r1]
-   58 00000038 4770            bx               lr
-   59 0000003A                 endp
-   60 0000003A         
-   61 0000003A                 END
+   63 00000030         ; remise √† zero de l'index
+   64 00000030 4902            ldr              r1, =indexTable
+   65 00000032 F04F 0200       mov              r2, #0
+   66 00000036 600A            str              r2, [r1]
+   67 00000038 4770            bx               lr
+   68 0000003A                 endp
+   69 0000003A         
+   70 0000003A                 END
               00 00 00000000 
               00000000 
               00000000 
@@ -212,8 +221,8 @@ Symbol: indexTable
       At line 18 in file Src\GestionSon.s
    Uses
       At line 19 in file Src\GestionSon.s
-      At line 32 in file Src\GestionSon.s
-      At line 55 in file Src\GestionSon.s
+      At line 41 in file Src\GestionSon.s
+      At line 64 in file Src\GestionSon.s
 
 maram 00000000
 
@@ -234,7 +243,7 @@ CallbackSon 00000000
 
 Symbol: CallbackSon
    Definitions
-      At line 31 in file Src\GestionSon.s
+      At line 40 in file Src\GestionSon.s
    Uses
       At line 21 in file Src\GestionSon.s
 Comment: CallbackSon used once
@@ -242,7 +251,7 @@ StartSon 00000030
 
 Symbol: StartSon
    Definitions
-      At line 53 in file Src\GestionSon.s
+      At line 62 in file Src\GestionSon.s
    Uses
       At line 22 in file Src\GestionSon.s
 Comment: StartSon used once
@@ -250,9 +259,9 @@ ValeurMax 0000002E
 
 Symbol: ValeurMax
    Definitions
-      At line 49 in file Src\GestionSon.s
+      At line 58 in file Src\GestionSon.s
    Uses
-      At line 37 in file Src\GestionSon.s
+      At line 46 in file Src\GestionSon.s
 Comment: ValeurMax used once
 moncode 00000000
 
@@ -323,7 +332,7 @@ Symbol: LongueurSon
    Definitions
       At line 9 in file Src\GestionSon.s
    Uses
-      At line 34 in file Src\GestionSon.s
+      At line 43 in file Src\GestionSon.s
 Comment: LongueurSon used once
 PWM_Set_Value_TIM3_Ch3 00000000
 
@@ -337,7 +346,7 @@ External symbols
    Definitions
       At line 18 in file .\Driver\DriverJeuLaser.inc
    Uses
-      At line 48 in file Src\GestionSon.s
+      At line 57 in file Src\GestionSon.s
 Comment: PWM_Set_Value_TIM3_Ch3 used once
 Son 00000000
 
@@ -345,7 +354,7 @@ Symbol: Son
    Definitions
       At line 8 in file Src\GestionSon.s
    Uses
-      At line 38 in file Src\GestionSon.s
+      At line 47 in file Src\GestionSon.s
 Comment: Son used once
 9 symbols
 354 symbols in table
